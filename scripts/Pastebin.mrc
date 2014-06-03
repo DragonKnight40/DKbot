@@ -98,21 +98,22 @@ alias -l pasteAction {
   if ($regex(chunk,$1-,/^[0-9a-f]+$/)) set %pastechunk 1
   elseif (%pastechunk) {
     unset %pastechunk
-    var %brokenSV = $+($left($1-,3),%pastegap)
+    var %brokenSV = $+(%pasteedge,$left($1-,3))
     var %current, %i = 1
     while (%i < 4) {
       %current = $mid(%brokenSV,%i,4)
       if ($validSV(%current)) {
+        inc %countpaste 1
         var %indexList = $getSVIndex(%current)
         if (%indexList != $null) addFound %indexList %current
       }
       inc %i 1
     }
   }
+  else set %pasteedge $right($1-,3)
   if (!$regex(paste,$1-,/\b(\d{4})\b/)) return
   inc %countpaste 1
   var %sv = $regml(paste,1)
   var %indexList = $getSVIndex(%sv)
   if (%indexList != $null) addFound %indexList %sv
-  set %pasteedge $right($1-,3)
 }

@@ -1,15 +1,6 @@
 ; Script to scan new giveaway threads posted on reddit for matches
 
 /*
- * on CONNECT event
- * Start searching for giveaways as soon as a connection is established
- */
-on *:CONNECT:{
-  DKcheck $null
-  timerreddit 0 60 reddit
-}
-
-/*
  * on .Start/.Stop event
  * Starts/stops searching for giveaways
  */
@@ -55,10 +46,6 @@ on *:SOCKREAD:Reddit:{
         echo -st 4HALTED
         halt
       }
-      if ($gettok(%currentlink,7,47) == 2979) {
-        msg ExpertEvan DUDE %currentlink
-        msg #Battle EE: %currentlink
-      }
       set %lastlink $regml(1)
     }
     if (%stillgiveaway) {
@@ -100,7 +87,9 @@ on *:SOCKREAD:Reddit:{
  */
 on *:SOCKCLOSE:Reddit:{
   if (%givefound != $null) {
-    msg #SVeXchange New giveaway thread posted $+ $iif(%lastlink,$+($chr(32),$chr(40),%lastlink,$chr(41)),) $+ . $+($getNicks(%givefoundindex,give),:) you have a match!
+    var %msg = New giveaway thread posted $+ $iif(%lastlink,$+($chr(32),$chr(40),%lastlink,$chr(41)),) $+ . $+($getNicks(%givefoundindex,give),:) you have a match!
+    msg #SVeXchange %msg
+    msg #smogonwifi %msg
   }
   unset %give*
   echo -st 4END REDDIT

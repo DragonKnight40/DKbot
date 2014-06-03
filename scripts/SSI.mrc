@@ -26,7 +26,7 @@ alias commas {
  * Halts execution unless the current user is DKbot
  */
 alias DKcheck {
-  if ($me != DKbot || $1 == Rhythm) {
+  if ($me != DKbot || $1 == Rhythm || $1 == #smogonwifi) {
     halt
   }
 }
@@ -45,7 +45,7 @@ alias DKlog {
  * Returns: Character set that activates DKbot commands
  */
 alias DKtrigger {
-  return [!.~@]
+  return [.~@]
 }
 
 /*

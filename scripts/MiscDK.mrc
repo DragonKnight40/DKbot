@@ -4,7 +4,7 @@
  * on .Source event
  * Links the user to my source code
  */
-on $*:TEXT:$($+(/^,$DKtrigger,(src|source|code)/Si)):#:if ($me == DKbot) msg $chan http://pastebin.com/u/DKbot
+on $*:TEXT:$($+(/^,$DKtrigger,(src|source|code)/Si)):#:if ($me == DKbot) msg $chan https://github.com/DragonKnight40/DKbot $chr(124) http://pastebin.com/u/DKbot
 
 /*
  * on Smogon event
@@ -18,7 +18,9 @@ on $*:TEXT:$($+(/^,$DKtrigger,Smogon\b/Si)):*:if ($me == DKbot) msg $iif($chan,$
  */
 on *:BAN:#:{
   DKcheck $nick
-  msg $chan DOWN GOES THE BANHAMMER http://goo.gl/qhTYTY
+  if ($chan != #smogonwifi) {
+    msg $chan DOWN GOES THE BANHAMMER http://goo.gl/qhTYTY
+  }
 }
 /*
  * on KICK event
@@ -26,10 +28,45 @@ on *:BAN:#:{
  */
 on *:KICK:#:{
   DKcheck $knick
-  if ($knick != $me) {
+  if ($knick != $me && $chan != #smogonwifi) {
     msg $chan OUTTA HERE $iif($rand(0,1),http://goo.gl/zWgqam,http://i.imgur.com/DbaoNuN.gif)
   }
 }
+
+/*
+ * on /r/ event
+ * Provides the full link to any subreddit written as /r/something
+ */
+on $*:TEXT:/(?<!\.com)\/(r|u)\/([^\s]+)\b/Si:#:{
+  DKcheck
+  var %sub = $regml(2)
+  if (%sub != pokemontrades && %sub != svexchange) {
+    msg $chan $+(http://reddit.com/,$iif($regml(1) == u,user,r),/,%sub)
+  }
+}
+
+/*
+ * on DISCONNECT event
+ * Trys to reconnect when disconnected
+ */
+on *:DISCONNECT:{
+  DKcheck $null
+  set %DKcid $cid
+  server irc.synirc.net:6666
+}
+
+/*
+ * on CONNECT event
+ * Start searching for giveaways as soon as a connection is established
+ */
+on *:CONNECT:{
+  if ($cid == %DKcid || $me == DKbot) {
+    unset %DKcid
+    tnick DKbot
+    timerreddit 0 60 reddit
+    password
+  }
+ }
 
 /*
  * These do not even deserve documentation lol
@@ -48,5 +85,10 @@ on $*:TEXT:$($+(/^,$DKtrigger,rustle/Si)):#:if ($me == DKbot) msg $chan http://i
 on $*:TEXT:$($+(/^,$DKtrigger,lenny/Si)):#:if ($me == DKbot) msg $chan http://goo.gl/L3Owh8
 on $*:TEXT:$($+(/^,$DKtrigger,i8m/Si)):#:if ($me == DKbot) msg $chan http://i.imgur.com/fwyWTfw.gif
 on $*:TEXT:$($+(/^,$DKtrigger,amab/Si)):#:if ($me == DKbot) msg $chan http://i.imgur.com/WjkLrjo.png
-on $*:TEXT:$($+(/^,$DKtrigger,cent/Si)):#:if ($me == DKbot) msg $chan http://i.imgur.com/51YBBuq.jpg
+on $*:TEXT:$($+(/^,$DKtrigger,cent/Si)):#:if ($me == DKbot) msg $chan http://i.imgur.com/ebY7qyT.jpg
 on $*:TEXT:$($+(/^,$DKtrigger,banana/Si)):#:if ($me == DKbot) msg $chan http://i.imgur.com/my9GNka.jpg
+;on $*:TEXT:$($+(/^,$DKtrigger,adamlutz/Si)):#:if ($me == DKbot) msg $chan http://i.imgur.com/5TPWPwX.jpg
+on $*:TEXT:$($+(/^,$DKtrigger,froakie/Si)):#:if ($me == DKbot) msg $chan http://i.imgur.com/LDA62GL.png
+on $*:TEXT:$($+(/^,$DKtrigger,raia/Si)):#:if ($me == DKbot) msg $chan http://i.imgur.com/J6IB6RN.png
+on $*:TEXT:$($+(/^,$DKtrigger,rash/Si)):#:if ($me == DKbot) msg $chan http://i.imgur.com/lB7dDzG.png
+on $*:TEXT:$($+(/^,$DKtrigger,calvin/Si)):#:if ($me == DKbot) msg $chan http://i.imgur.com/ek2LR9R.jpg
