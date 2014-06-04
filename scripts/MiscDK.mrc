@@ -34,10 +34,10 @@ on *:KICK:#:{
 }
 
 /*
- * on /r/ event
+ * off /r/ event
  * Provides the full link to any subreddit written as /r/something
  */
-on $*:TEXT:/(?<!\.com)\/(r|u)\/([^\s]+)\b/Si:#:{
+off $*:TEXT:/(?<!\.com)\/(r|u)\/([^\s]+)\b/Si:#:{
   DKcheck
   var %sub = $regml(2)
   if (%sub != pokemontrades && %sub != svexchange) {
@@ -87,8 +87,9 @@ on $*:TEXT:$($+(/^,$DKtrigger,i8m/Si)):#:if ($me == DKbot) msg $chan http://i.im
 on $*:TEXT:$($+(/^,$DKtrigger,amab/Si)):#:if ($me == DKbot) msg $chan http://i.imgur.com/WjkLrjo.png
 on $*:TEXT:$($+(/^,$DKtrigger,cent/Si)):#:if ($me == DKbot) msg $chan http://i.imgur.com/ebY7qyT.jpg
 on $*:TEXT:$($+(/^,$DKtrigger,banana/Si)):#:if ($me == DKbot) msg $chan http://i.imgur.com/my9GNka.jpg
-;on $*:TEXT:$($+(/^,$DKtrigger,adamlutz/Si)):#:if ($me == DKbot) msg $chan http://i.imgur.com/5TPWPwX.jpg
+off $*:TEXT:$($+(/^,$DKtrigger,adamlutz/Si)):#:if ($me == DKbot) msg $chan http://i.imgur.com/5TPWPwX.jpg
 on $*:TEXT:$($+(/^,$DKtrigger,froakie/Si)):#:if ($me == DKbot) msg $chan http://i.imgur.com/LDA62GL.png
 on $*:TEXT:$($+(/^,$DKtrigger,raia/Si)):#:if ($me == DKbot) msg $chan http://i.imgur.com/J6IB6RN.png
 on $*:TEXT:$($+(/^,$DKtrigger,rash/Si)):#:if ($me == DKbot) msg $chan http://i.imgur.com/lB7dDzG.png
 on $*:TEXT:$($+(/^,$DKtrigger,calvin/Si)):#:if ($me == DKbot) msg $chan http://i.imgur.com/ek2LR9R.jpg
+on $*:TEXT:$($+(/^,$DKtrigger,joel/Si)):#:if ($me == DKbot) msg $chan http://i.imgur.com/7Vjfz9T.jpg

@@ -105,9 +105,9 @@ on *:SOCKCLOSE:Reddit:{
 alias -l addFound {
   var %i = 1
   while (%i <= $numtok($1,44)) {
-    if (!%givefoundindex) set %givefoundindex $gettok($1,%i,44)
+    if (%givefoundindex == $null) set %givefoundindex $gettok($1,%i,44)
     else set %givefoundindex $+(%givefoundindex,$chr(44),$gettok($1,%i,44))
-    if (!%givefoundsv) set %givefoundsv $2
+    if (%givefoundsv == $null) set %givefoundsv $2
     else set %givefoundsv $+(%givefoundsv,$chr(44),$2)
     inc %i 1
   }

@@ -69,9 +69,9 @@ on *:SOCKCLOSE:Paste:{
 alias -l addFound {
   var %i = 1
   while (%i <= $numtok($1,44)) {
-    if (!%pastefoundindex) set %pastefoundindex $gettok($1,%i,44)
+    if (%pastefoundindex == $null) set %pastefoundindex $gettok($1,%i,44)
     else set %pastefoundindex $+(%pastefoundindex,$chr(44),$gettok($1,%i,44))
-    if (!%pastefoundsv) set %pastefoundsv $2
+    if (%pastefoundsv == $null) set %pastefoundsv $2
     else set %pastefoundsv $+(%pastefoundsv,$chr(44),$2)
     inc %i 1
   }
