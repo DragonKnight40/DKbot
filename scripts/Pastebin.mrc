@@ -4,14 +4,14 @@
  * on pastebin.com event
  * Connects to pastebin links
  */
-on $*:TEXT:/(pastebin)\.com\/([a-z0-9]{8})/Si:*:{
+on $*:TEXT:/pastebin\.com\/([a-z0-9]{8})/Si:*:{
   DKcheck $nick
   echo -st 12START PASTE: %countpaste
   unset %paste*
   set %pastestart %countpaste
-  set %paste $regml(2)
+  set %paste $regml(1)
   set %pastenick $nick
-  set %pastesite $+($regml(1),.com)
+  set %pastesite pastebin.com
   set %pastemsg $iif($chan != $null,msg $chan,msg $nick)
   sockclose Paste
   sockopen Paste %pastesite 80

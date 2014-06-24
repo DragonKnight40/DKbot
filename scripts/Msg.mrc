@@ -3,12 +3,12 @@
 on $*:TEXT:$($+(/^,$DKtrigger,Msg\b/Si)):*:{
   DKcheck $chan
   var %nick = $nick, %user = $2, %time = $ctime, %msg = $3-, %respond = $iif($chan,notice,msg)
-  if (%user == $me) {
+  if (%user == $me || %user == is || %user == in) {
     %respond %nick Lolno.
     halt
   }
   set %DKqueue. [ $+ [ %user ] ] $addtok(%DKqueue. [ $+ [ %user ] ],$+(%nick,$chr(124),%time,$chr(124),%msg),9)
-  %respond %nick Will do.
+  %respond %nick Message queued for %user $+ .
 }
 
 on *:TEXT:*:*:{
@@ -24,6 +24,21 @@ on *:ACTION:*:*:{
 on *:JOIN:#:{
   DKcheck $chan
   DKqueue $nick $chan
+}
+
+on *:NICK:{
+  DKcheck $newnick
+  if (%DKqueue. [ $+ [ $newnick ] ] != $null) {
+    var %i = 1, %chan
+    while (%i <= $chan(0)) {
+      if ($newnick ison $chan(%i)) {
+        %chan = $chan(%i)
+        break
+      }
+      inc $i 1
+    }
+    DKqueue $newnick %chan
+  }
 }
 
 alias -l DKqueue {

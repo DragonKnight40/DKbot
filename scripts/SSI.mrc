@@ -6,6 +6,7 @@
 alias main return D:\SVeXDatabase\Main.csv
 alias sv return D:\SVeXDatabase\SV.csv
 alias dk return D:\SVeXDatabase\DK.log
+alias pics return D:\SVeXDatabase\Pics.txt
 
 /*
  * commas
@@ -37,7 +38,7 @@ alias DKcheck {
  * $1-: The text to write
  */
 alias DKlog {
-  write $dk $asctime(mm/dd/yy HH:nn:ss) $1-
+  write -il1 $dk $asctime(mm/dd/yy HH:nn:ss) $1-
 }
 
 /*

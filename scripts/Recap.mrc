@@ -4,9 +4,12 @@
  * on .Recap event
  * Scans logs for SV matches and reports them to the user
  */
-on $*:TEXT:$($+(/^,$DKtrigger,Recap\b/Si)):*:{
+on $*:TEXT:$($+(/^,$chr(40),$DKtrigger,$chr(41),Recap,$chr(40),\d,$chr(41),?\b/Si)):*:{
   DKcheck $nick
-  var %svlist, %regex, %current, %records = 0, %i
+  var %svlist, %regex, %current, %records = 0, %i = 1, %c = $regml(1), %amount = $regml(2)
+  if (!%amount) {
+    %amount = 3
+  }
   if ($2) {
     if ($isSVmulti($2)) {
       %svlist = $zeroSVmulti($2)
@@ -20,19 +23,18 @@ on $*:TEXT:$($+(/^,$DKtrigger,Recap\b/Si)):*:{
     %svlist = $getSV($getMainIndex($nick).nick)
   }
   if (%svlist == $null) {
-    notice $nick You are not registered with me. Type ".FC help" for help.
+    $iif($chan,notice,msg) $nick You are not registered with me. Type " $+ %c $+ FC help" for help.
     return
   }
   %regex = /^\d{2}\/\d{2}\/\d{2}\s\d{2}:\d{2}:\d{2}\s( $+ $replace(%svlist,$chr(44),$chr(124)) $+ )/
-  %i = $lines($dk)
-  while (%records < 3) {
-    %current = $read($dk,%i)
-    if ($regex(%current,%regex)) {
+  while (%records < %amount) {
+    %current = $read($dk,r,%regex,%i)
+    if ($readn) {
       explainResult $nick %current
       inc %records 1
+      %i = $readn + 1
     }
-    dec %i 1
-    if (%i < 1) {
+    else {
       msg $nick No $iif(%records > 0,other,) results found for $+(07,$replace(%svlist,$chr(44),$+(,$chr(44),07)),,.)
       halt
     }

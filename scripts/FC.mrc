@@ -6,8 +6,8 @@
  */
 on $*:TEXT:$($+(/^,$chr(40),$DKtrigger,$chr(41),FC\b/Si)):*:{
   DKcheck $nick
-  echo -st !FC used by $nick $iif($chan != $null,on $chan,(PM))
   var %datum, %msg = $iif($chan != $null,msg $chan,msg $nick), %notice = $iif($chan != $null,notice $nick,msg $nick), %c = $regml(1)
+  echo -st $+(%c,FC) used by $nick $iif($chan != $null,on $chan,(PM))
   
   if ($2 == help && $3 == $null) {
     %msg Syntax: $+(%c,FC) $chr(124) $+(%c,FC) Nick or IGN or FC or SV $chr(124) $+(%c,FC) IGN FC SV,SV2,SV3 (SV2+ optional)
@@ -59,16 +59,28 @@ on $*:TEXT:$($+(/^,$chr(40),$DKtrigger,$chr(41),FC\b/Si)):*:{
   }
   elseif ($4 != $null) {
     var %IGN, %FC, %SV
-    if ($isFC($2)) %FC = $2
-    elseif ($isFC($3)) %FC = $3
-    elseif ($isFC($4)) %FC = $4
+    if ($isFC($2)) {
+      %FC = $2
+    }
+    elseif ($isFC($3)) {
+      %FC = $3
+    }
+    elseif ($isFC($4)) {
+      %FC = $4
+    }
     else {
       %notice Syntax error. Syntax: $+(%c,FC) $chr(124) $+(%c,FC) Nick or IGN or FC or SV $chr(124) $+(%c,FC) IGN FC SV,SV2,SV3 (SV2+ optional)
       return
     }
-    if ($isSVmulti($2)) %SV = $2
-    elseif ($isSVmulti($3)) %SV = $3
-    elseif ($isSVmulti($4)) %SV = $4
+    if ($isSVmulti($2) || $2 == none) {
+      %SV = $2
+    }
+    elseif ($isSVmulti($3) || $3 == none) {
+      %SV = $3
+    }
+    elseif ($isSVmulti($4) || $4 == none) {
+      %SV = $4
+    }
     else {
       %notice Syntax error. Syntax: $+(%c,FC) $chr(124) $+(%c,FC) Nick or IGN or FC or SV $chr(124) $+(%c,FC) IGN FC SV,SV2,SV3 (SV2+ optional)
       return
@@ -167,7 +179,7 @@ alias -l sendMsg {
   var %current, %i = 1
   while (%i <= $numtok($2,47)) {
     %current = $gettok($2,%i,47)
-    msg $1 Nick: $gettok(%current,2,44) $chr(124) IGN: $gettok(%current,3,44) $chr(124) FC: $gettok(%current,4,44) $chr(124) SV: $+(07,$replace($gettok(%current,5-,44),$chr(44),$+(,$chr(44),07)),)
+    msg $1 Nick: $gettok(%current,2,44) $chr(124) IGN: $gettok(%current,3,44) $chr(124) FC: $gettok(%current,4,44) $iif($gettok(%current,5-,44) == $null,,$chr(124) SV: $+(07,$replace($gettok(%current,5-,44),$chr(44),$+(,$chr(44),07)),))
     inc %i
   }
 }
@@ -188,7 +200,7 @@ alias -l setDatum {
   }
   else $deleteDatum($1)
   write $main $+(%index,$chr(44),$1,$chr(44),$2,$chr(44),$3)
-  while (%i <= $numtok($4,44)) {
+  while ($4 != none && %i <= $numtok($4,44)) {
     write $sv $+(%index,$chr(44),$zeroSV($gettok($4,%i,44)))
     inc %i
   }
