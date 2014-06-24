@@ -80,7 +80,7 @@ on *:CONNECT:{
     unset %DKcid
     tnick DKbot
     timerreddit 0 60 reddit
-    msg NickServ PASSWORD $+($chr(76),$chr(111),$chr(108),$chr(110),$chr(111),$chr(46))
+    DKpassword
   }
 }
 
